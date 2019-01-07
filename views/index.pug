@@ -1,0 +1,71 @@
+doctype html
+html 
+ head
+    title Chat Application Example by DEVAHOY
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css')
+    link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css',rel='stylesheet')
+    link(rel='stylesheet', href='css/main.css')
+    link(rel='stylesheet', href='css/emoji.css')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+ body
+    #chat-app
+      #chat.has-text-centered
+        section.hero.is-success
+          .hero-body
+            .container
+              h1.title Chat
+              h2 Chat Application with Node.js + socket.io
+        section.section.chat-container
+          .container
+            .columns
+              .box.column.is-8.is-offset-2
+                h2.title Chatbox
+                .chat-messages.has-text-left
+                  div#chat-messages(data-emojiable="true")
+                form
+                  .field.has-addons
+                    p.control
+                      input(type='text', class='input', value='Thai', id='name')
+                    p.control.is-expanded
+                      input(type='text', class='input', placeholder='Try to say something', id='message')
+                    p.control
+                      input(type='submit', class='button is-success', value='Post')
+        footer
+          .container
+            .content
+              p
+                | Powered by
+                a(href='https://devahoy.com') DEVAHOY(3000);
+        script.
+           const socket = io();
+
+           socket.on('chatter', function(object){
+             let name = object.name;
+             if(name != $('#name').val()){
+                let message = `${object.name} : ${object.message}`;
+                $('#chat-messages').append($('<div class="clear">').append($('<p class="from-them">').text(message)));
+                $('#chat-messages').scrollTop($('#chat-messages').prop("scrollHeight"));
+             }
+           });
+           $('form').submit(function(){
+            const name = $('#name').val();
+            const message = $('#message').val();
+            if(message != ''){
+              var object = {
+                 name: name, 
+                 message: message
+              };
+              $('#chat-messages').append($('<div class="clear">').append($('<p class="from-me">').text(message)));
+              socket.emit('chatter', object);
+              $('#message').val('');
+              $('#chat-messages').scrollTop($('#chat-messages').prop("scrollHeight"));
+              return false;
+            }
+            else
+              return false;
+          });
+        script(src='lib/js/config.js')
+        script(src='lib/js/util.js')
+        script(src='lib/js/jquery.emojiarea.js')
+        script(src='lib/js/emoji-picker.js')
