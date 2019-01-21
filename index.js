@@ -12,8 +12,13 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.get('/', (req, res) => {
-  res.render('index')
-})
+  res.render('index');
+});
+app.get('/messages', (req, res)=>{
+  Message.find({}, (err, messages)=>{
+    res.send(messages);
+  })
+});
 
 
 const server = app.listen(APP_PORT, () => {

@@ -26,7 +26,7 @@ html
                 form
                   .field.has-addons
                     p.control
-                      input(type='text', class='input', value='Thai', id='name')
+                      input(type='text', class='input', value='Type your name here:', id='name')
                     p.control.is-expanded
                       input(type='text', class='input', placeholder='Try to say something', id='message')
                     p.control
@@ -36,6 +36,20 @@ html
             .content
               p
         script.
+          function getMesssage(){
+            $.get(window.location.origin + "/messages", (data)=>{
+              data.forEach(function appendData(data)
+                {
+                  let message = `${data.name} : ${data.message}`;
+                  $('#chat-messages').append($('<div class="clear">').append($('<p class="from-them">').text(message)));
+                  $('#chat-messages').scrollTop($('#chat-messages').prop("scrollHeight"));
+                }
+              );
+            });
+          }
+          $(function(){
+              getMesssage();
+          });
           const socket = io();
 
           socket.on('chatter', function(object){
