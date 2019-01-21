@@ -1,14 +1,14 @@
 doctype html
-html 
- head
-    title Chat Application Example by DEVAHOY
+html
+  head
+    title Chat Application Example
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css')
     link(href='https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css',rel='stylesheet')
     link(rel='stylesheet', href='css/main.css')
     link(rel='stylesheet', href='css/emoji.css')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
- body
+  body
     #chat-app
       #chat.has-text-centered
         section.hero.is-success
@@ -35,26 +35,24 @@ html
           .container
             .content
               p
-                | Powered by
-                a(href='https://devahoy.com') DEVAHOY(3000);
         script.
-           const socket = io();
+          const socket = io();
 
-           socket.on('chatter', function(object){
-             let name = object.name;
-             if(name != $('#name').val()){
-                let message = `${object.name} : ${object.message}`;
-                $('#chat-messages').append($('<div class="clear">').append($('<p class="from-them">').text(message)));
-                $('#chat-messages').scrollTop($('#chat-messages').prop("scrollHeight"));
-             }
-           });
-           $('form').submit(function(){
+          socket.on('chatter', function(object){
+            let name = object.name;
+            if(name != $('#name').val()){
+              let message = `${object.name} : ${object.message}`;
+              $('#chat-messages').append($('<div class="clear">').append($('<p class="from-them">').text(message)));
+              $('#chat-messages').scrollTop($('#chat-messages').prop("scrollHeight"));
+            }
+          });
+          $('form').submit(function(){
             const name = $('#name').val();
             const message = $('#message').val();
             if(message != ''){
               var object = {
-                 name: name, 
-                 message: message
+                name: name,
+                message: message
               };
               $('#chat-messages').append($('<div class="clear">').append($('<p class="from-me">').text(message)));
               socket.emit('chatter', object);
